@@ -1,0 +1,6 @@
+#Restarting Mariadb for confirmation it was enabled
+  - name: Restarting Mariadb service
+    service:
+      name: mysql
+      state: restarted
+      enabled: true

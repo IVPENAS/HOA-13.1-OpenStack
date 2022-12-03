@@ -1,0 +1,6 @@
+#Restating Memcached to verify it was enabled
+  - name: Restarting memcached
+    service:
+      name: memcached
+      state: restarted
+      enabled: true

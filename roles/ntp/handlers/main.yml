@@ -1,0 +1,6 @@
+#Restarting chrony
+  - name: Restarting chrony
+    service:
+      name: chronyd.service
+      state: restarted
+      enabled: true

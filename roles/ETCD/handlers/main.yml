@@ -1,0 +1,5 @@
+#Restarting ETCD service to verify it was enabled
+  - name: Reloading systemd Service
+    systemd:
+      daemon_reload: yes
+    ignore_errors: yes
