@@ -1,21 +1,27 @@
-#Installing Memcahed 
+#Installing Memcached
+---
+
   - name: Installing Memcached
+    tags: Memcached, ubuntu
     apt:
       name:
-        - memcached
-        - python-python-memcached
+        -  memcached
+        -  python3-memcache
       state: latest
+    when: ansible_distribution == "Ubuntu"
 
-  - name: Editing memcached.conf file
-    copy:
-      src: memcached
-      dest: /etc/sysconfig/memcached
-      owner: root
-      group: root
-      mode: 644
+  - name: Configuring the conf file for memcached
+    tags: Memcached. ubutu
+    lineinfile:
+      path: /etc/memcached.conf
+      regexp: "-l 127.0.0.0"
+      line: "-l 10.0.0.11"
+      state: present
+      backup: yes
 
-  - name: Starting memcached service
+  - name: Reloading the systemd Memcached
+    tags: memcached,ubuntu
     service:
       name: memcached
-      state: started
-      enabled: true
+      state: restarted
+    when: ansible_distribution == "Ubuntu"

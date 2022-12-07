@@ -9,13 +9,14 @@
       name: "*"
       state: latest
       update_cache: true
+    when: ansible_distribution == "Ubuntu"
 
 - hosts: controller_node
   become: true
   roles:
     - ntp
-#    - packages
-#    - database
-#    - message_queue
-#    - memcached
-#    - etcd
+    - OS_Packages
+    - SQL
+    - MQ
+    - Memcached
+    - ETCD

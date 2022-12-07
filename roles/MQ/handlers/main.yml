@@ -1,5 +1,5 @@
 
-- name: Configuring rabbitmq-server
-   shell: |
-     rabbitmqctl add_user openstack server12345
-     rabbitmqctl set_permissions openstack ".*" ".*" ".*"
+#- name: Configuring rabbitmq-server
+#  shell: |
+#     rabbitmqctl add_user openstack server12345
+#     rabbitmqctl set_permissions openstack ".*" ".*" ".*"

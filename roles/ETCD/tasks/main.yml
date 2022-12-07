@@ -1,60 +1,80 @@
 #Installation of ETCD
 
-  - name: Creating a ETCD User
-    group:
+  - name: Installing ETCD
+    tags: etcd, ubuntu
+    apt:
       name: etcd
-      system: true
-      state: present
+      state: latest
+    when: ansible_distribution == "Ubuntu"
 
   - name: Creating a directory/folder for ETCD files
-    user:
-      name: etcd
-      home: "/var/lib/etcd"
-      shell: /bin/false
-      group: etcd
-      system: true
+    tags: etcd, ubuntu, add
+    lineinfile:
+      path: /etc/default/etcd
+      regexp: 'ETCD_NAME="default"'
+      line: 'ETCD_NAME= "controller"'
+      state: present
 
-  - name: Creating Directory 1 for etcd
-    file:
-      path: /etc/etcd
-      state: directory
-      owner: etcd
-      group: etcd
+  - name: Replacing important files for configuration pt. 1
+    tags: etcd, ubuntu, replace, add
+    lineinfile:
+      path: /etc/default/etcd
+      regexp: 'ETCD_DATA_DIR="/var/lib/etcd/default"'
+      line: 'ETCD_DATA_DIR="/var/lib/etcd"'
+      state: present
 
-  - name: Creating Directory 2 for etcd
-    file:
-      path: /var/lib/etcd
-      state: directory
-      owner: etcd
-      group: etcd
+  - name: Replacing important files for configuration pt. 2
+    tags: etcd, ubuntu, replace, add
+    lineinfile:
+      path: /etc/default/etcd
+      regexp: 'ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"'
+      line: 'ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"'
+      state: present
 
-  - name: Installing ETCD tar.gz file from GitHub
-    shell: |
-      ETCD_VER=v3.2.7
-      rm -rf /tmp/etcd && mkdir -p /tmp/etcd
-      curl -L https://github.com/coreos/etcd/releases/download/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
-      tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C /tmp/etcd --strip-components=1
-      cp /tmp/etcd/etcd /usr/bin/etcd
-      cp /tmp/etcd/etcdctl /usr/bin/etcdctl
+  - name: Replacing important files for configuration pt. 3
+    tags: etcd, ubuntu, replace, add
+    lineinfile:
+      path: /etc/default/etcd
+      regexp: 'ETCD_INITIAL_CLUSTER="default=localhost:2380"'
+      line: 'ETCD_INITIAL_CLUSTER="controller=http://10.0.0.11:2380"'
+      state: present
 
-  - name: Creating a config file for ETCD
-    copy:
-      src: etcd.conf.yml
-      dest: /etc/etcd/etcd.conf.yml
-      owner: root
-      group: root
-      mode: 644
+  - name: Replacing important files for configuration pt. 4
+    tags: etcd, ubuntu, replace, add
+    lineinfile:
+      path: /etc/default/etcd
+      regexp: 'ETCD_INITIAL_ADVERTISE_PEER_URLS="http://localhost:2380"'
+      line: 'ETCD_INITIAL_ADVERTISE_PEER_URLS=http://10.0.0.11:2380"'
+      state: present
 
-  - name: Copying the ETCD service file
-    copy:
-      src: etcd.service
-      dest: /usr/lib/systemd/system/etcd.service
-      owner: root
-      group: root
-      mode: 644
+  - name: Replacing important files for configuration pt. 5
+    tags: etcd, ubuntu, replace, add
+    lineinfile:
+      path: /etc/default/etcd
+      regexp: 'ETCD_ADVERTISE_CLIENT_URLS="localhost:2379"'
+      line: 'ETCD_ADVERTISE_CLIENT_URLS="http://10.0.0.11:2379"'
+      state: present
 
-  - name: Enabling ETCD service
+  - name: Replacing important files for configuration pt. 6
+    tags: etcd, ubuntu, replace, add
+    lineinfile:
+      path: /etc/default/etcd
+      regexp: 'ETCD_LISTEN_PEER_URLs="http://localhost:2380"'
+      line: 'ETCD_LISTEN_PEER_URLs="http://0.0.0.0:2380"'
+      state: present
+
+  - name: Replacing important files for configuration pt. 7
+    tags: etcd, ubuntu, replace, add
+    lineinfile:
+      path: /etc/default/etcd
+      regexp: 'ETCD_LISTEN_CLIENT_URLS="http://localhost:2379"'
+      line: 'ETCD_LISTEN_CLIENT_URLs="http://10.0.0.11:2379"'
+      state: present
+
+  - name: Reloading ETCD Service
+    tags: etcd, ubuntu , restart
     service:
       name: etcd
-      state: started
+      state: restarted
       enabled: true
+    when: ansible_distribution == "Ubuntu"
