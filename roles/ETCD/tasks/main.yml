@@ -71,10 +71,10 @@
       line: 'ETCD_LISTEN_CLIENT_URLs="http://10.0.0.11:2379"'
       state: present
 
-  - name: Reloading ETCD Service
-    tags: etcd, ubuntu , restart
-    service:
-      name: etcd
-      state: restarted
-      enabled: true
-    when: ansible_distribution == "Ubuntu"
+#  - name: Reloading ETCD Service
+#    tags: etcd, ubuntu , restart
+#    service:
+#      name: etcd
+#      state: restarted
+#      enabled: true
+#    when: ansible_distribution == "Ubuntu"
