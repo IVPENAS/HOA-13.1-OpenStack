@@ -1,7 +1,10 @@
-#Obtaining OpenStack Packages
-#- name: Enabling OpenStack repository
-#    repo: 'obs://Cloud:OpenStack:Stein/Ubuntu_22.01.6'
+#Installation Openstack_Packages
 
-#- name: Installing OpenStack
-#  pip:
-#    name: python-openstackclient
+  - name: Installing OpenStack
+    tags: OpenStack,ubuntu
+    apt:
+      name:
+        - nova-compute
+        - python3-openstackclient
+      state: latest
+    when: ansible_distribution == "Ubuntu"

@@ -1,11 +1,20 @@
-#Installing rabbit message-queue
-  - name: Installing rabbitmq-server
+#Installation of Message_Queue
+
+  - name: Installing MQ
+    tags: MessageQueue
     apt:
       name: rabbitmq-server
       state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
 
-  - name: Starting rabbitmq-server service
-    service:
-      name: rabbitmq-server.service
-      state: started
-      enabled: true
+  - name: Adding OpenSTack User
+    community.rabbitmq.rabbitmq_user:
+      user: openstack
+      password: RABBIT_PASS
+      vhost: /
+      configure_priv: .*
+      read_priv: .*
+      write_priv: .*
+      state: present
+    when: ansible_distribution == "Ubuntu"

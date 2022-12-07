@@ -19,7 +19,7 @@
       state: present
       backup: yes
 
-  - name: Reloading the systemd Memcached
+  - name: Reloading Memcached service
     tags: memcached,ubuntu
     service:
       name: memcached
